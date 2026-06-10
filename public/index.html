@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meter Tracker - Property Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 Meter Tracker</h1>
+      <div class="header-actions">
+        <button class="btn btn-settings" onclick="openSettingsModal()">⚙️ Settings</button>
+        <button class="btn btn-primary" onclick="openPropertyModal()">+ Add Property</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Properties Grid -->
+      <div id="propertiesGrid" class="properties-grid">
+        <p class="loading">Loading properties...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Property Modal -->
+  <div id="propertyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closePropertyModal()">&times;</span>
+      <h2>Add New Property</h2>
+      <form onsubmit="addProperty(event)">
+        <input type="text" id="propertyName" placeholder="Property Name (e.g., House 1, Apt 2B)" required>
+        <input type="text" id="propertyAddress" placeholder="Address (optional)">
+        <button type="submit" class="btn btn-primary">Add Property</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Meter Reading Modal -->
+  <div id="meterModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeMeterModal()">&times;</span>
+      <h2>Add Meter Reading</h2>
+      <form onsubmit="addMeterReading(event)">
+        <input type="date" id="readingDate" required>
+        <input type="number" id="meterReading" placeholder="Current Meter Reading" step="0.01" required>
+        <input type="file" id="meterPhoto" accept="image/*">
+        <button type="submit" class="btn btn-primary">Save Reading</button>
+      </form>
+      <div id="calculatedBill" style="display:none; margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+        <p><strong>Units Consumed:</strong> <span id="unitsConsumed">0</span></p>
+        <p><strong>Bill Amount:</strong> ₹<span id="billAmount">0</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeSettingsModal()">&times;</span>
+      <h2>Settings</h2>
+      <form onsubmit="updateSettings(event)">
+        <label>BESCOM Rate (per unit)</label>
+        <input type="number" id="bescomRate" step="0.01" min="0" required>
+        <button type="submit" class="btn btn-primary">Update Rate</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Property Details Modal -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content modal-large">
+      <span class="close" onclick="closeDetailsModal()">&times;</span>
+      <div class="details-header">
+        <h2 id="detailsPropertyName"></h2>
+        <button class="btn btn-danger" onclick="deleteProperty()">Delete Property</button>
+      </div>
+      <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="openMeterModal()">+ Add Reading</button>
+      
+      <table class="readings-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Meter Reading</th>
+            <th>Units Used</th>
+            <th>Bill (₹)</th>
+            <th>Photo</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="readingsTableBody">
+          <tr><td colspan="7" class="text-center">No readings yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

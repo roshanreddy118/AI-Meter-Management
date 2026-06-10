@@ -1,0 +1,21 @@
+{
+  "name": "tenant-meter-tracker",
+  "version": "1.0.0",
+  "description": "Simple meter reading and billing tracker for rental properties",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@vercel/postgres": "^0.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  }
+}

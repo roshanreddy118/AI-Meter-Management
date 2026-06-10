@@ -309,7 +309,7 @@ export default function Home() {
             <>
               <div className="details-header">
                 <h2>{selectedProperty.name}</h2>
-                <button className="btn btn-danger" onClick={deleteProperty}>Delete House</button>
+                <button className="btn btn-danger" onClick={deleteProperty}>Delete</button>
               </div>
               <button className="btn btn-primary" style={{ marginBottom: '20px' }} onClick={() => setShowMeterModal(true)}>
                 + Add Reading

@@ -209,7 +209,7 @@ export default function Home() {
           ) : dbError ? (
             <p className="loading">Initialize database at /api/init</p>
           ) : properties.length === 0 ? (
-            <p className="loading">No rent houses. Click "+ Add Rent House"</p>
+            <p className="loading">No properties. Click "+ Add Property"</p>
           ) : (
             properties.map((prop) => (
               <div
@@ -233,15 +233,15 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Add Rent House */}
+      {/* Add Property */}
       <div id="propertyModal" className={`modal ${showPropertyModal ? 'show' : ''}`} onClick={() => setShowPropertyModal(false)}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <span className="close" onClick={() => setShowPropertyModal(false)}>&times;</span>
-          <h2>Add Rent House</h2>
+          <h2>Add Property</h2>
           <form onSubmit={addProperty}>
             <input
               type="text"
-              placeholder="House name (House 1, Flat A, Villa B, etc)"
+              placeholder="Name (House 1, Flat A, etc)"
               value={propertyForm.name}
               onChange={(e) => setPropertyForm({ ...propertyForm, name: e.target.value })}
               required
@@ -252,7 +252,7 @@ export default function Home() {
               value={propertyForm.address}
               onChange={(e) => setPropertyForm({ ...propertyForm, address: e.target.value })}
             />
-            <button type="submit" className="btn btn-primary">Add House</button>
+            <button type="submit" className="btn btn-primary">Add</button>
           </form>
         </div>
       </div>
@@ -309,7 +309,7 @@ export default function Home() {
             <>
               <div className="details-header">
                 <h2>{selectedProperty.name}</h2>
-                <button className="btn btn-danger" onClick={deleteProperty}>Delete House</button>
+                <button className="btn btn-danger" onClick={deleteProperty}>Delete</button>
               </div>
               <button className="btn btn-primary" style={{ marginBottom: '20px' }} onClick={() => setShowMeterModal(true)}>
                 + Add Reading

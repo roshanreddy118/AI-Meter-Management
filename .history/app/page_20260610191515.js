@@ -296,10 +296,10 @@ export default function Home() {
           <div className="modal-content" style={{ maxWidth: '600px' }}>
             <h2>🏠 Welcome to Meter Tracker!</h2>
             
-            {houseNames && houseNames.length === 0 ? (
+            {houseNames.length === 0 ? (
               <>
                 <p style={{ marginBottom: '20px', fontSize: '16px', lineHeight: '1.6', color: 'rgba(255, 255, 255, 0.9)' }}>
-                  Let's set up your rental properties. How many houses/flats do you want to track?
+                  Let's set up your rental properties. How many houses do you want to track?
                 </p>
                 <form onSubmit={handleStartOnboarding}>
                   <input
@@ -310,14 +310,13 @@ export default function Home() {
                     value={numHouses}
                     onChange={(e) => setNumHouses(e.target.value)}
                     required
-                    autoFocus
                   />
                   <button type="submit" className="btn btn-primary">
                     Next
                   </button>
                 </form>
               </>
-            ) : houseNames && houseNames.length > 0 ? (
+            ) : (
               <>
                 <div style={{ marginBottom: '20px' }}>
                   <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '10px' }}>
@@ -334,21 +333,21 @@ export default function Home() {
                 </div>
 
                 <form onSubmit={handleAddHouseName}>
-                  <label style={{ marginBottom: '10px' }}>Enter name for property {currentHouseIndex + 1}</label>
+                  <label style={{ marginBottom: '10px' }}>Enter name for house {currentHouseIndex + 1}</label>
                   <input
                     type="text"
-                    placeholder={`e.g., House 1, Villa A, Flat 2B, Floor 3`}
+                    placeholder={`e.g., House 1, Villa A, Apartment 2B`}
                     value={currentHouseName}
                     onChange={(e) => setCurrentHouseName(e.target.value)}
                     required
                     autoFocus
                   />
                   <button type="submit" className="btn btn-primary">
-                    {currentHouseIndex === houseNames.length - 1 ? '✓ Complete Setup' : 'Next'}
+                    {currentHouseIndex === houseNames.length - 1 ? '✓ Complete Setup' : 'Next House'}
                   </button>
                 </form>
               </>
-            ) : null}
+            )}
           </div>
         </div>
       </div>

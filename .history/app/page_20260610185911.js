@@ -241,21 +241,7 @@ export default function Home() {
       <main>
         {!databaseConnected && (
           <div className="alert-warning">
-            <strong>⚠️ Database not connected</strong>
-            <br/>
-            {typeof window !== 'undefined' && window.location.hostname === 'localhost' ? (
-              <>This is normal during local testing. To save data permanently, deploy to Vercel and add DATABASE_URL environment variable (see DEPLOYMENT.md).</>
-            ) : (
-              <>
-                Database connection failed. Please:
-                <ul style={{marginLeft: '20px', marginTop: '8px'}}>
-                  <li>Check that DATABASE_URL is set in Vercel environment variables</li>
-                  <li>Verify the Neon connection string is correct (https://console.neon.tech)</li>
-                  <li>Go to Deployments → Redeploy latest</li>
-                  <li>Check browser console for detailed error</li>
-                </ul>
-              </>
-            )}
+            <strong>⚠️ Database not connected:</strong> This is normal during local testing without a Vercel Postgres database. The UI works fine! To save data permanently, deploy to Vercel (see DEPLOYMENT.md).
           </div>
         )}
         <div className="properties-grid">

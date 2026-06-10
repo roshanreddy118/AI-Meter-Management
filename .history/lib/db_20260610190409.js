@@ -55,7 +55,6 @@ export const initializeDatabase = async () => {
 
 export const getProperties = async () => {
   try {
-    console.log('getProperties called - DATABASE_URL exists:', !!process.env.DATABASE_URL);
     const result = await sql`
       SELECT p.*, 
              (SELECT meter_reading FROM meter_readings WHERE property_id = p.id ORDER BY reading_date DESC LIMIT 1) as last_reading,
@@ -64,12 +63,9 @@ export const getProperties = async () => {
       FROM properties p
       ORDER BY p.name
     `;
-    console.log('Query successful, rows:', result.rows.length);
     return result.rows;
   } catch (error) {
     console.error('Error fetching properties:', error);
-    console.error('Error code:', error.code);
-    console.error('Error message:', error.message);
     throw error;
   }
 };

@@ -11,7 +11,12 @@ export default function Home() {
   const [databaseConnected, setDatabaseConnected] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Onboarding states (removed)
+  // Onboarding states
+  const [numHouses, setNumHouses] = useState('');
+  const [houseNames, setHouseNames] = useState([]);
+  const [currentHouseIndex, setCurrentHouseIndex] = useState(0);
+  const [currentHouseName, setCurrentHouseName] = useState('');
+
   // Modal states
   const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [showMeterModal, setShowMeterModal] = useState(false);
@@ -79,8 +84,57 @@ export default function Home() {
     }
   }
 
-  // Onboarding handlers (removed - now just use Add Property)
-  
+  // Onboarding handlers
+  function handleStartOnboarding(e) {
+    e.preventDefault();
+    const num = parseInt(numHouses);
+    if (num > 0 && num <= 50) {
+      setHouseNames(Array(num).fill(''));
+      setCurrentHouseIndex(0);
+    }
+  }
+
+  function handleAddHouseName(e) {
+    e.preventDefault();
+    const newNames = [...houseNames];
+    newNames[currentHouseIndex] = currentHouseName;
+    setHouseNames(newNames);
+
+    if (currentHouseIndex < houseNames.length - 1) {
+      setCurrentHouseIndex(currentHouseIndex + 1);
+      setCurrentHouseName('');
+    } else {
+      // All houses added, create them in database
+      createAllHouses(newNames);
+    }
+  }
+
+  async function createAllHouses(names) {
+    try {
+      for (const name of names) {
+        if (name.trim()) {
+          const res = await fetch('/api/properties', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name.trim(), address: '' }),
+          });
+          if (!res.ok) {
+            console.error('Failed to create property:', name);
+          }
+        }
+      }
+      setShowOnboarding(false);
+      setNumHouses('');
+      setHouseNames([]);
+      setCurrentHouseIndex(0);
+      setCurrentHouseName('');
+      await fetchProperties();
+    } catch (error) {
+      console.error('Error creating houses:', error);
+      alert('Failed to create houses. Please try again.');
+    }
+  }
+
   // Property operations
   async function handleAddProperty(e) {
     e.preventDefault();
@@ -229,6 +283,73 @@ export default function Home() {
 
   const selectedProperty = Array.isArray(properties) ? properties.find((p) => p.id === selectedPropertyId) : null;
 
+  // Show onboarding modal if needed
+  if (showOnboarding) {
+    return (
+      <div className="container">
+        <div className={`modal show`}>
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
+            <h2>🏠 Welcome to Meter Tracker!</h2>
+            
+            {houseNames && houseNames.length === 0 ? (
+              <>
+                <p style={{ marginBottom: '20px', fontSize: '16px', lineHeight: '1.6', color: 'rgba(255, 255, 255, 0.9)' }}>
+                  Let's set up your rental properties. How many houses/flats do you want to track?
+                </p>
+                <form onSubmit={handleStartOnboarding}>
+                  <input
+                    type="number"
+                    min="1"
+                    max="50"
+                    placeholder="Enter number of houses (1-50)"
+                    value={numHouses}
+                    onChange={(e) => setNumHouses(e.target.value)}
+                    required
+                    autoFocus
+                  />
+                  <button type="submit" className="btn btn-primary">
+                    Next
+                  </button>
+                </form>
+              </>
+            ) : houseNames && houseNames.length > 0 ? (
+              <>
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '10px' }}>
+                    House {currentHouseIndex + 1} of {houseNames.length}
+                  </p>
+                  <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.2)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{ 
+                      width: `${((currentHouseIndex + 1) / houseNames.length) * 100}%`, 
+                      height: '100%', 
+                      background: 'linear-gradient(90deg, #667eea, #764ba2)',
+                      transition: 'width 0.3s'
+                    }}></div>
+                  </div>
+                </div>
+
+                <form onSubmit={handleAddHouseName}>
+                  <label style={{ marginBottom: '10px' }}>Enter name for property {currentHouseIndex + 1}</label>
+                  <input
+                    type="text"
+                    placeholder={`e.g., House 1, Villa A, Flat 2B, Floor 3`}
+                    value={currentHouseName}
+                    onChange={(e) => setCurrentHouseName(e.target.value)}
+                    required
+                    autoFocus
+                  />
+                  <button type="submit" className="btn btn-primary">
+                    {currentHouseIndex === houseNames.length - 1 ? '✓ Complete Setup' : 'Next'}
+                  </button>
+                </form>
+              </>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <header>
@@ -246,32 +367,22 @@ export default function Home() {
       <main>
         {!databaseConnected && (
           <div className="alert-warning">
-            <strong>⚠️ Database Error</strong>
+            <strong>⚠️ Database not connected</strong>
             <br/>
-            Please visit this URL to initialize the database:
-            <br/>
-            <code style={{ 
-              background: 'rgba(0,0,0,0.3)', 
-              padding: '8px 12px', 
-              borderRadius: '6px', 
-              display: 'block', 
-              marginTop: '10px',
-              fontFamily: 'monospace'
-            }}>
-              {typeof window !== 'undefined' ? window.location.origin : 'your-app'}/api/init
-            </code>
-            <br/>
-            Then refresh this page.
+            {typeof window !== 'undefined' && window.location.hostname === 'localhost' ? (
+              <>This is normal during local testing. To save data permanently, deploy to Vercel and add DATABASE_URL environment variable (see DEPLOYMENT.md).</>
+            ) : (
+              <>
+                Database connection failed. Please visit <strong>/api/init</strong> to initialize the database, then refresh.
+              </>
+            )}
           </div>
         )}
-        
         <div className="properties-grid">
           {loading ? (
             <p className="loading">Loading properties...</p>
-          ) : !databaseConnected ? (
-            <p className="loading">Database not initialized. Please visit /api/init first.</p>
           ) : properties.length === 0 ? (
-            <p className="loading">No properties yet. Click "+ Add Property" to get started!</p>
+            <p className="loading">No properties yet. Add one to get started!</p>
           ) : (
             properties.map((prop) => (
               <div

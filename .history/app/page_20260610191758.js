@@ -11,7 +11,12 @@ export default function Home() {
   const [databaseConnected, setDatabaseConnected] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Onboarding states (removed)
+  // Onboarding states
+  const [numHouses, setNumHouses] = useState('');
+  const [houseNames, setHouseNames] = useState([]);
+  const [currentHouseIndex, setCurrentHouseIndex] = useState(0);
+  const [currentHouseName, setCurrentHouseName] = useState('');
+
   // Modal states
   const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [showMeterModal, setShowMeterModal] = useState(false);
@@ -79,8 +84,57 @@ export default function Home() {
     }
   }
 
-  // Onboarding handlers (removed - now just use Add Property)
-  
+  // Onboarding handlers
+  function handleStartOnboarding(e) {
+    e.preventDefault();
+    const num = parseInt(numHouses);
+    if (num > 0 && num <= 50) {
+      setHouseNames(Array(num).fill(''));
+      setCurrentHouseIndex(0);
+    }
+  }
+
+  function handleAddHouseName(e) {
+    e.preventDefault();
+    const newNames = [...houseNames];
+    newNames[currentHouseIndex] = currentHouseName;
+    setHouseNames(newNames);
+
+    if (currentHouseIndex < houseNames.length - 1) {
+      setCurrentHouseIndex(currentHouseIndex + 1);
+      setCurrentHouseName('');
+    } else {
+      // All houses added, create them in database
+      createAllHouses(newNames);
+    }
+  }
+
+  async function createAllHouses(names) {
+    try {
+      for (const name of names) {
+        if (name.trim()) {
+          const res = await fetch('/api/properties', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name.trim(), address: '' }),
+          });
+          if (!res.ok) {
+            console.error('Failed to create property:', name);
+          }
+        }
+      }
+      setShowOnboarding(false);
+      setNumHouses('');
+      setHouseNames([]);
+      setCurrentHouseIndex(0);
+      setCurrentHouseName('');
+      await fetchProperties();
+    } catch (error) {
+      console.error('Error creating houses:', error);
+      alert('Failed to create houses. Please try again.');
+    }
+  }
+
   // Property operations
   async function handleAddProperty(e) {
     e.preventDefault();

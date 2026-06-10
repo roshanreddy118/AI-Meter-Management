@@ -332,9 +332,9 @@ export default function Home() {
                     readings.map((r) => (
                       <tr key={r.id}>
                         <td>{new Date(r.reading_date).toLocaleDateString()}</td>
-                        <td>{parseFloat(r.meter_reading).toFixed(2)}</td>
-                        <td>{parseFloat(r.units_consumed || 0).toFixed(2)}</td>
-                        <td>₹{parseFloat(r.bill_amount || 0).toFixed(2)}</td>
+                        <td>{r.meter_reading}</td>
+                        <td>{r.units_consumed?.toFixed(2) || '0'}</td>
+                        <td>₹{r.bill_amount?.toFixed(2) || '0'}</td>
                         <td>
                           <select
                             value={r.payment_status}

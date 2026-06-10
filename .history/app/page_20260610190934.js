@@ -356,7 +356,7 @@ export default function Home() {
       </div>
 
       {/* Settings Modal */}
-      <div id="settingsModal" className={`modal ${showSettingsModal ? 'show' : ''}`} onClick={closeSettingsModal}>
+      <div className={`modal ${showSettingsModal ? 'show' : ''}`} onClick={closeSettingsModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <span className="close" onClick={closeSettingsModal}>
             &times;
@@ -380,7 +380,7 @@ export default function Home() {
       </div>
 
       {/* Property Details Modal */}
-      <div id="detailsModal" className={`modal ${showDetailsModal ? 'show' : ''}`} onClick={closeDetailsModal}>
+      <div className={`modal ${showDetailsModal ? 'show' : ''}`} onClick={closeDetailsModal}>
         <div
           className="modal-content modal-large"
           onClick={(e) => e.stopPropagation()}

@@ -221,27 +221,6 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-}
-
-/* Ensure meter modal is always on top when open */
-#meterModal.show {
-  z-index: 1100;
-}
-
-/* Ensure property modal is on top when open */
-#propertyModal.show {
-  z-index: 1050;
-}
-
-/* Settings modal on top */
-#settingsModal.show {
-  z-index: 1050;
-}
-
-/* Details modal base layer */
-#detailsModal.show {
-  z-index: 1000;
 }
 
 .modal-content {
